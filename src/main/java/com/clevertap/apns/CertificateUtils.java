@@ -129,16 +129,17 @@ public class CertificateUtils {
         certificate.checkValidity();
 
         // Ensure that it's a push certificate
-        final Map<String, String> stringStringMap = CertificateUtils.splitCertificateSubject(certificate.getSubjectDN().getName());
+        /*final Map<String, String> stringStringMap = CertificateUtils.splitCertificateSubject(certificate.getSubjectDN().getName());
+
         final String cn = stringStringMap.get("CN");
         if (!cn.toLowerCase().contains("push")) {
             throw new CertificateException("Not a push certificate - " + cn);
-        }
+        }*/
 
-        if (production && cn.toLowerCase().contains("apple development ios push services")) {
+        /*if (production && cn.toLowerCase().contains("apple development ios push services")) {
             throw new CertificateEnvironmentMismatchException("Invalid environment for this certificate");
         } else if (!production && cn.toLowerCase().contains("apple production ios push services")) {
             throw new CertificateEnvironmentMismatchException("Invalid environment for this certificate");
-        }
+        }*/
     }
 }
