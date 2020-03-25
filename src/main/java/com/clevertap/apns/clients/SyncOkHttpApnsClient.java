@@ -284,16 +284,21 @@ public class SyncOkHttpApnsClient implements ApnsClient {
         }
 
         if (keyID != null && teamID != null && apnsAuthKey != null) {
+            try {
+                checkCachedToken();
+            } catch (InvalidKeySpecException | NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
+                return null;
+            }
 
             // Generate a new JWT token if it's null, or older than 55 minutes
-            if (cachedJWTToken == null || System.currentTimeMillis() - lastJWTTokenTS > 55 * 60 * 1000) {
+            /*if (cachedJWTToken == null || System.currentTimeMillis() - lastJWTTokenTS > 55 * 60 * 1000) {
                 try {
                     lastJWTTokenTS = System.currentTimeMillis();
                     cachedJWTToken = JWT.getToken(teamID, keyID, apnsAuthKey);
                 } catch (InvalidKeySpecException | NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
                     return null;
                 }
-            }
+            }*/
 
             rb.header("authorization", "bearer " + cachedJWTToken);
         }
@@ -301,6 +306,13 @@ public class SyncOkHttpApnsClient implements ApnsClient {
         return rb.build();
     }
 
+    public synchronized void checkCachedToken() throws InvalidKeySpecException, NoSuchAlgorithmException, SignatureException, InvalidKeyException {
+        // Generate a new JWT token if it's null, or older than 55 minutes
+        if (cachedJWTToken == null || System.currentTimeMillis() - lastJWTTokenTS > 55 * 60 * 1000) {
+            lastJWTTokenTS = System.currentTimeMillis();
+            cachedJWTToken = JWT.getToken(teamID, keyID, apnsAuthKey);
+        }
+    }
 
     @Override
     public NotificationResponse push(Notification notification) {
