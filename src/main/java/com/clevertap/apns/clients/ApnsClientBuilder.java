@@ -74,7 +74,7 @@ public class ApnsClientBuilder {
      */
     public static OkHttpClient.Builder createDefaultOkHttpClientBuilder() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(10, TimeUnit.SECONDS).writeTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS);
+        builder.connectTimeout(10, TimeUnit.SECONDS).writeTimeout(10, TimeUnit.SECONDS).readTimeout(5, TimeUnit.SECONDS);
         builder.connectionPool(new ConnectionPool(10, 10, TimeUnit.MINUTES));
         return builder;
     }
